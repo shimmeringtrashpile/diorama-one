@@ -8,88 +8,109 @@ using UnityEngine.XR.ARFoundation;
 
 public class ARManager : MonoBehaviour
 {
-    [SerializeField]
-    ARSession m_Session;
+    //[SerializeField]
+    //ARSession m_Session;
+
+    //[SerializeField]
+    //TextMeshProUGUI ResponseText;
+
+    //[SerializeField]
+    //RenderTexture Render;
+
+    //[SerializeField]
+    //RawImage Background;
+
+    //[SerializeField]
+    //GameObject NewCube;
 
     [SerializeField]
-    TextMeshProUGUI ResponseText;
+    TextMeshProUGUI PopUpText;
 
     [SerializeField]
-    RenderTexture Render;
-
-    [SerializeField]
-    RawImage Background;
-
-    [SerializeField]
-    GameObject NewCube;
-
+    RawImage rawImage;
+      
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(ARDelay());
+        // StartCoroutine(ARDelay());
+        WebCamDevice[] devices = WebCamTexture.devices;
+        foreach (WebCamDevice item in devices)
+        {
+            print(item.name);
+        }
+        WebCamTexture tex = new WebCamTexture(devices[0].name);
+        rawImage.texture = tex;
+        tex.Play();
     }
 
-    // Update is called once per frame
+    void ShowText()
+    {
+        PopUpText.text = "Whatever";
+    }
+
+    //// Update is called once per frame
     void Update()
     {
-        UpdateRenderTexture();
-        UpdateTestCube();
-    }
-
-    void UpdateTestCube()
-    {
-        WebCamTexture webCam = new WebCamTexture();
-        Renderer renderer = NewCube.GetComponent<Renderer>();
-        renderer.material.mainTexture = webCam;
-        webCam.Play();
-    }
-
-
-    void UpdateRenderTexture()
-    {
-
-        WebCamDevice[] devices = WebCamTexture.devices;
-        foreach (WebCamDevice webCamDevice in devices)
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            print("webcam" + webCamDevice.name);
-
-        }
-        
-        WebCamTexture text = new WebCamTexture(devices[0].name);
-        Background.texture = text;
-        //Background.;
-
-
-        var commandBuffer = new CommandBuffer();
-        commandBuffer.name = "AR Camera Background Blit Pass";
-        // var texture = !m_ArCameraBackground.material.HasProperty("_MainTex") ? null : m_ArCameraBackground.material.GetTexture("_MainTex");
-        Graphics.SetRenderTarget(Render.colorBuffer, Render.depthBuffer);
-        commandBuffer.ClearRenderTarget(true, false, Color.clear);
-        commandBuffer.Blit(Render, BuiltinRenderTextureType.CurrentActive, Background.material);
-        Graphics.ExecuteCommandBuffer(commandBuffer);
-
-    }
-
-
-    IEnumerator ARDelay()
-    {
-        yield return new WaitForSeconds(.1f);
-        if ((ARSession.state == ARSessionState.None) ||
-            (ARSession.state == ARSessionState.CheckingAvailability))
-        {
-            yield return ARSession.CheckAvailability();
-        }
-
-        if (ARSession.state == ARSessionState.Unsupported)
-        {
-            // Start some fallback experience for unsupported devices
-            ResponseText.text = "something";
-        }
-        else
-        {
-            // Start the AR session
-            ResponseText.text = "something else";
-            m_Session.enabled = true;
+            ShowText();
         }
     }
+
+    //void UpdateTestCube()
+    //{
+    //    WebCamTexture webCam = new WebCamTexture();
+    //    Renderer renderer = NewCube.GetComponent<Renderer>();
+    //    renderer.material.mainTexture = webCam;
+    //    webCam.Play();
+    //}
+
+
+    //void UpdateRenderTexture()
+    //{
+
+    //    WebCamDevice[] devices = WebCamTexture.devices;
+    //    foreach (WebCamDevice webCamDevice in devices)
+    //    {
+    //        print("webcam: " + webCamDevice.name);
+
+    //    }
+
+    //    WebCamTexture text = new WebCamTexture(devices[0].name);
+    //    Background.texture = text;
+    //    //Background.;
+
+
+    //    var commandBuffer = new CommandBuffer();
+    //    commandBuffer.name = "AR Camera Background Blit Pass";
+    //    // var texture = !m_ArCameraBackground.material.HasProperty("_MainTex") ? null : m_ArCameraBackground.material.GetTexture("_MainTex");
+    //    Graphics.SetRenderTarget(Render.colorBuffer, Render.depthBuffer);
+    //    commandBuffer.ClearRenderTarget(true, false, Color.clear);
+    //    commandBuffer.Blit(Render, BuiltinRenderTextureType.CurrentActive, Background.material);
+    //    Graphics.ExecuteCommandBuffer(commandBuffer);
+
+    //}
+
+
+    //IEnumerator ARDelay()
+    //{
+    //    yield return new WaitForSeconds(.1f);
+    //    if ((ARSession.state == ARSessionState.None) ||
+    //        (ARSession.state == ARSessionState.CheckingAvailability))
+    //    {
+    //        yield return ARSession.CheckAvailability();
+    //    }
+
+    //    if (ARSession.state == ARSessionState.Unsupported)
+    //    {
+    //        // Start some fallback experience for unsupported devices
+    //        ResponseText.text = "something";
+    //    }
+    //    else
+    //    {
+    //        // Start the AR session
+    //        ResponseText.text = "something else";
+    //        m_Session.enabled = true;
+    //    }
+    //}
 }
