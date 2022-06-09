@@ -10,7 +10,7 @@ using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.External;
 using Niantic.ARDK.Utilities;
 using Niantic.ARDK.Utilities.Logging;
-
+// using TMPro;
 using UnityEngine;
 
 namespace Niantic.ARDK.Extensions
@@ -18,7 +18,7 @@ namespace Niantic.ARDK.Extensions
   /// Instantiates, updates, and removes GameObjects for each detected
   /// [PlaneAnchor](@ref Niantic.ARDK.AR.Anchors.IARPlaneAnchor]. This settings on this class
   /// are the ultimate authority on the used IARWorldTrackingConfiguration.PlaneDetection value.
-  public sealed class ARPlaneManager:
+  public class ARPlaneManager:
     ARSessionListener
   {
     /// The object to spawn and update when a plane is detected.
@@ -34,9 +34,13 @@ namespace Niantic.ARDK.Extensions
 
     private readonly Dictionary<Guid, GameObject> _planeLookup = new Dictionary<Guid, GameObject>();
 
-    /// If this is null no plane prefabs will be created.
-    /// If this changes after planes have already been discovered existing instances won't be
-    /// changed.
+        /// If this is null no plane prefabs will be created.
+        /// If this changes after planes have already been discovered existing instances won't be
+        /// changed.
+        /// 
+//        [SerializeField]
+//        TextMeshProUGUI NotificationText; 
+
     public GameObject PlanePrefab
     {
       get => _planePrefab;
@@ -144,6 +148,8 @@ namespace Niantic.ARDK.Extensions
         return;
 
       var plane = Instantiate(_planePrefab);
+ //           NotificationText.text = "Notification Text";
+
       plane.name = "Plane-" + anchor.Identifier.ToString().Substring(0, 5);
       _planeLookup.Add(anchor.Identifier, plane);
     }
